@@ -21,6 +21,8 @@ namespace Omega\Helpers;
 /**
  * Systen helper class.
  *
+ *  The `System` helper class providing functions related to the system environment.
+ *
  * @category    Omega
  * @package     Omega\Helpers
  * @link        https://omegacms.github.com
@@ -34,7 +36,7 @@ class System
     /**
      * Get the operating system name.
      *
-     * @return string Return the operating system name.
+     * @return string Returns the operating system name (e.g., "mac", "windows", "linux", or "unknown").
      */
     public static function getOperatingSystem() : string
     {

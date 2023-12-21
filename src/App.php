@@ -27,6 +27,8 @@ use Omega\Application\Application;
 /**
  * Application helper class.
  *
+ * This `App` class interacting with the Omega Application.
+ *
  * @category    Omega
  * @package     Omega\Helpers
  * @link        https://omegacms.github.com
@@ -38,10 +40,10 @@ use Omega\Application\Application;
 class App
 {
     /**
-     * Create a new instance of Application object.
+     * Get an instance of the Omega Application.
      *
-     * @param  ?string $alias Holds the instance alias.
-     * @return mixed
+     * @param  ?string $alias Holdds the instance alias or null to get the main application instance.
+     * @return mixed Returns the resolved instance or the main application instance if no alias is provided.
      */
     public static function application( ?string $alias = null ) : mixed
     {
@@ -53,9 +55,9 @@ class App
     }
 
     /**
-     * Set the base path.
+     * Get the base path of the application.
      *
-     * @return ?string Return the base path or null.
+     * @return ?string Returns the base path or null if not set.
      */
     public static function basePath() : ?string
     {
@@ -63,9 +65,9 @@ class App
     }
 
     /**
-     * Set the base path.
+     * Dump variables and end script execution.
      *
-     * @param  ...$params Holds the variadic params.
+     * @param  mixed ...$params The variables to be dumped.
      * @return void
      */
     public static function dd( ...$params ) : void
@@ -76,9 +78,9 @@ class App
     }
 
     /**
-     * Variables dump.
+     * Display a variable dump in a formatted manner.
      *
-     * @param  array %array Holds an array of dumping.
+     * @param  array $array The array to be dumped.
      * @return void
      */
     public static function dump( array $array ) : void

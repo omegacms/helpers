@@ -27,7 +27,11 @@ use function random_bytes;
 use Exception;
 
 /**
- * Http helper class.
+ *  Security class.
+ *
+ * The `Security` class provides utility methods for enhancing security measures in
+ * a web application. It includes functionalities for managing CSRF tokens, securing
+ * form submissions,and validating input data against specified rules.
  *
  * @category    Omega
  * @package     Omega\Helpers
@@ -42,8 +46,9 @@ class Security
     /**
      * Set the CSRF token.
      *
+     * Generates a CSRF token and stores it in the session.
      *
-     * @return string Return the CSRF token.
+     * @return string Returns the generated CSRF token.
      * @throws Exception if session is not enabled.
      */
     public static function csrf() : string
@@ -64,8 +69,10 @@ class Security
     /**
      * Secure the CSRF token.
      *
+     * Compares the CSRF token from the session with the one submitted in the POST data.
+     *
      * @return void
-     * @throws Exception
+     * @throws Exception if session is not enabled or CSRF token mismatch.
      */
     public static function secure() : void
     {
@@ -87,10 +94,12 @@ class Security
     /**
      * Validate input.
      *
+     * Validates input data against specified rules.
+     *
      * @param  array  $data        Holds an array of data to validate.
      * @param  array  $rules       Holds an array of rules.
-     * @param  string $sessionName Holds the session name.
-     * @return mixed
+     * @param  string $sessionName Holds the session name for storing validation errors.
+     * @return mixed Returns the validation result.
      */
     public static function validate( array $data, array $rules, string $sessionName = 'errors' ) : mixed
     {
