@@ -53,4 +53,24 @@ class System
                 return 'unknown';
         }
     }
+
+    /**
+     * Join the given paths together.
+     * 
+     * @param  ?string $basePath Holds the base path for the framework.
+     * @param  string  ...$paths Holds the variadic arguments for the base path.
+     * @return Return the joined paths.
+     */
+    public static function joinPaths( string $basePath, string ...$paths ) : string
+    {
+        foreach ( $paths as $index => $path ) {
+            if ( empty( $path ) ) {
+                unset( $paths[ $index ] );
+            } else {
+                $paths[ $index ] = DIRECTORY_SEPARATOR . ltrim( $path, DIRECTORY_SEPARATOR );
+            }
+        }
+
+        return $basePath . implode( '', $paths );
+    }
 }
