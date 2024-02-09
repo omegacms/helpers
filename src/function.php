@@ -21,10 +21,17 @@ namespace Omega\Helpers;
 /**
  * @use
  */
+use function bin2hex;
 use function function_exists;
+use function hash_equals;
 use function implode;
+use function is_null;
 use function ltrim;
+use function random_bytes;
 use function strtolower;
+use Exception;
+use Omega\Application\Application;
+use Omega\View\View;
 
 /**
  * This file container various function for helping during the development.
@@ -93,5 +100,224 @@ if ( ! function_exists( 'normalize_path' ) ) :
         /**
          * @todo To be implemented.
          */
+    }
+endif;
+
+if ( ! function_exists( 'response' ) ) :
+    /**
+     * Get the response instance..
+     *
+     * @return mixed Returns the response instance.
+     */
+    function response() : mixed
+    {
+        return app( 'response' );
+    }
+endif;
+
+if ( ! function_exists( 'redirect' ) ) :
+    /**
+     * Redirect to a specific URL.
+     *
+     * @param  string $url Holds the URL to redirect to.
+     * @return mixed Return that result of the redirect operation.
+     */
+    function redirect( string $url ) : mixed
+    {
+        return response()->redirect( $url );
+    }
+endif;
+
+if ( ! function_exists( 'session' ) ) :
+    /**
+     * Get or set a session value.
+     *
+     * @param  ?string $key     Holds the session key or null to get the entire session.
+     * @param  mixed   $default Holds the default value if the key is not found.
+     * @return mixed Returns the session value or the entire session if no key is provided.
+     */
+    function session( ?string $key = null, mixed $default = null ) : mixed
+    {
+        if ( is_null( $key ) ) {
+            return app( 'session' );
+        }
+
+        return app( 'session' )->get( $key, $default );
+    }
+endif;
+
+if ( ! function_exists( 'view' ) ) :
+    /**
+     * Render a view with the specified template and data.
+     *
+     * @param  string $template Holds the template name.
+     * @param  array  $data     Holds an array of value to pass to the view.
+     * @return View Return an instance of the View class.
+     */
+    function view( string $template, array $data = [] ) : View
+    {
+        return app()->resolve( 'view' )->render( $template, $data );
+    }
+endif;
+
+if ( ! function_exists( 'config' ) ) :
+    /**
+     * Alias or set a configuration value.
+     *
+     * @param  ?string $key     Holds the configuration key or null to get the entire configuration.
+     * @param  mixed   $default Holds the default value if the key is not found.
+     * @return mixed Returns the configuration value or the entire configuration if no key is provided.
+    */
+    function config( ?string $key = null, mixed $default = null ) : mixed
+    {
+        if ( is_null( $key ) ) {
+            return app( 'config' );
+        }
+
+        return app( 'config' )->get( $key, $default );
+    }
+endif;
+
+if ( ! function_exists( 'env' ) ) :
+    /**
+     * Get an environment variable.
+     *
+     * @param  string $key     Holds the environment key.
+     * @param  mixed  $default Holds the default value if the key is not set.
+     * @return mixed Returns the value of the environment variable or the default value if the key is not set.
+     */
+    function env( string $key, mixed $default = null ) : mixed
+    {
+        if ( isset( $_SERVER[ $key ] ) ) {
+            return $_SERVER[ $key ];
+        }
+
+        return $default;
+    }
+endif;
+
+if ( ! function_exists( 'app' ) ) :
+    /**
+     * Get an instance of the Omega Application.
+     *
+     * @param  ?string $alias Holdds the instance alias or null to get the main application instance.
+     * @return mixed Returns the resolved instance or the main application instance if no alias is provided.
+     */
+    function app( ?string $alias = null ) : mixed
+    {
+        if ( is_null( $alias ) ) {
+            return Application::getInstance();
+        }
+
+        return Application::getInstance()->resolve( $alias );
+    }
+endif;
+
+if ( ! function_exists( 'basePath' ) ) :
+    /**
+     * Get the base path of the application.
+     *
+     * @return ?string Returns the base path or null if not set.
+     */
+    function basePath() : ?string
+    {
+        return app( 'paths.base' );
+    }
+endif;
+
+if ( ! function_exists( 'dd' ) ) :
+    /**
+     * Dump variables and end script execution.
+     *
+     * @param  mixed ...$params The variables to be dumped.
+     * @return void
+     */
+    function dd( ...$params ) : void
+    {
+        var_dump( ...$params );
+
+        die;
+    }
+endif;
+
+if ( ! function_exists( 'dump' ) ) :
+    /**
+     * Display a variable dump in a formatted manner.
+     *
+     * @param  array $array The array to be dumped.
+     * @return void
+     */
+    function dump( array $array ) : void
+    {
+        echo "<pre>"; print_r( $array ); echo "</pre>";
+    }
+endif;
+
+if ( ! function_exists( 'csrf' ) ) :
+    /**
+     * Set the CSRF token.
+     *
+     * Generates a CSRF token and stores it in the session.
+     *
+     * @return string Returns the generated CSRF token.
+     * @throws Exception if session is not enabled.
+     */
+    function csrf() : string
+    {
+        $session = session();
+
+        if ( ! $session ) {
+            throw new Exception(
+                'Session is not enabled.'
+            );
+        }
+
+        $session->put( 'token', $token = bin2hex( random_bytes( 32 ) ) );
+
+        return $token;
+    }
+endif;
+
+if ( ! function_exists( 'secure' ) ) :
+    /**
+     * Secure the CSRF token.
+     *
+     * Compares the CSRF token from the session with the one submitted in the POST data.
+     *
+     * @return void
+     * @throws Exception if session is not enabled or CSRF token mismatch.
+     */
+    function secure() : void
+    {
+        $session = session();
+
+        if ( ! $session ) {
+            throw new Exception(
+                'Session is not enabled.'
+            );
+        }
+
+        if ( ! isset( $_POST[ 'csrf' ] ) || ! $session->has( 'token' ) ||  ! hash_equals( $session->get( 'token' ), $_POST[ 'csrf' ] ) ) {
+            throw new Exception(
+                'CSRF token mismatch'
+            );
+        }
+    }
+endif;
+
+if ( ! function_exists( 'validation' ) ) :
+    /**
+     * Validate input.
+     *
+     * Validates input data against specified rules.
+     *
+     * @param  array  $data        Holds an array of data to validate.
+     * @param  array  $rules       Holds an array of rules.
+     * @param  string $sessionName Holds the session name for storing validation errors.
+     * @return mixed Returns the validation result.
+     */
+    function validate( array $data, array $rules, string $sessionName = 'errors' ) : mixed
+    {
+        return app( 'validator' )->validate( $data, $rules, $sessionName );
     }
 endif;
