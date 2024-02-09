@@ -30,7 +30,10 @@
   "autoload-dev": {
     "psr-4": {
       "Omega\\Helpers\\Tests\\": "tests/"
-    }
+    },
+    "files": [
+      "src/function.php"
+    ]
   },
   "scripts": {
     "test": "vendor/bin/phpunit"
