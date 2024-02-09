@@ -25,7 +25,10 @@
   "autoload": {
     "psr-4": {
       "Omega\\Helpers\\": "src/"
-    }
+    },
+    "files": [
+      "src/function.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
