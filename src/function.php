@@ -34,7 +34,12 @@ use Omega\Application\Application;
 use Omega\View\View;
 
 /**
- * This file container various function for helping during the development.
+ * Omega Helpers Functions.
+ * 
+ * This file contains various helper functions to assist in development. It includes 
+ * path manipulation, operating system detection, response handling, view rendering, 
+ * configuration access, environment variable retrieval, application instance retrieval,
+ * debugging aids, and CSRF protection.
  *
  * @category    Omega
  * @package     Omega\Helpers
@@ -47,6 +52,8 @@ use Omega\View\View;
 if ( ! function_exists( 'join_paths' ) ) :
     /**
      * Join the given path.
+     * 
+     * Concatenates a base path with additional paths and returns the result.
      * 
      * @param  ?string $basePath Holds the base path to join.
      * @param  string  ...$paths Holds the paths to join.
@@ -69,6 +76,8 @@ endif;
 if ( ! function_exists( 'get_operating_system' ) ) :
     /**
      * Get the operating system name.
+     * 
+     * Retrieves the operatingsystem name (e.g. `mac`, `windows`, `linux` or `unknown`).
      *
      * @return string Returns the operating system name (e.g., "mac", "windows", "linux", or "unknown").
      */
@@ -93,19 +102,26 @@ if ( ! function_exists( 'normalize_path' ) ) :
     /**
      * Normalize path based on filesystem type.
      * 
-     * @return void
+     * @param  string $path Holds the path to normalize.
+     * @return string Return the path normalized path based on operating system.
      */
-    function normalize_path() : void
+    function normalize_path( string $path ) : string
     {
-        /**
-         * @todo To be implemented.
-         */
+        $separator = DIRECTORY_SEPARATOR;
+        $path = str_replace( [ '/', '\\' ], $separator, $path );
+        $path = preg_replace( '#' . preg_quote( $separator ) . '{2,}#', $separator, $path );
+
+        if ( get_operating_system() === 'windows' && substr( $path, -1 ) !== $separator ) {
+            $path .= $separator;
+        }
+
+        return $path;
     }
 endif;
 
 if ( ! function_exists( 'response' ) ) :
     /**
-     * Get the response instance..
+     * Get the response instance.
      *
      * @return mixed Returns the response instance.
      */
@@ -118,6 +134,9 @@ endif;
 if ( ! function_exists( 'redirect' ) ) :
     /**
      * Redirect to a specific URL.
+     * 
+     * Redirects to a specified URL and return the result of the redirect
+     * session if no key is provided.
      *
      * @param  string $url Holds the URL to redirect to.
      * @return mixed Return that result of the redirect operation.
@@ -148,7 +167,7 @@ endif;
 
 if ( ! function_exists( 'view' ) ) :
     /**
-     * Render a view with the specified template and data.
+     * Render a view with the specified template and data, returning an istance of View class.
      *
      * @param  string $template Holds the template name.
      * @param  array  $data     Holds an array of value to pass to the view.
