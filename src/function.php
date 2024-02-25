@@ -201,9 +201,9 @@ endif;
 
 if ( ! function_exists( 'env' ) ) :
     /**
-     * Get an environment variable.
+     * Get the value of an environment variable.
      *
-     * @param  string $key     Holds the environment key.
+     * @param  string $key     Holds the key of the environment variable.
      * @param  mixed  $default Holds the default value if the key is not set.
      * @return mixed Returns the value of the environment variable or the default value if the key is not set.
      */
@@ -343,9 +343,9 @@ if ( ! function_exists( 'value' ) ) :
     /**
      * The default value of the given value.
      *
-     * @param  mixed $value
-     * @param  mixed ...$args
-     * @return mixed
+     * @param  mixed $value   Holds the value to check.
+     * @param  mixed ...$args Holds additional arguments if `$values` is a Closure.
+     * @return mixed Returns the default value or the result of the Closure if `$value` is a Closure.
      */
     function value( mixed $value, mixed ...$args ) : mixed
     {
