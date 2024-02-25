@@ -29,15 +29,17 @@ use function is_null;
 use function ltrim;
 use function random_bytes;
 use function strtolower;
+use Closure;
 use Exception;
 use Omega\Application\Application;
+use Omega\Environment\Env;
 use Omega\View\View;
 
 /**
  * Omega Helpers Functions.
- * 
- * This file contains various helper functions to assist in development. It includes 
- * path manipulation, operating system detection, response handling, view rendering, 
+ *
+ * This file contains various helper functions to assist in development. It includes
+ * path manipulation, operating system detection, response handling, view rendering,
  * configuration access, environment variable retrieval, application instance retrieval,
  * debugging aids, and CSRF protection.
  *
@@ -52,9 +54,9 @@ use Omega\View\View;
 if ( ! function_exists( 'join_paths' ) ) :
     /**
      * Join the given path.
-     * 
+     *
      * Concatenates a base path with additional paths and returns the result.
-     * 
+     *
      * @param  ?string $basePath Holds the base path to join.
      * @param  string  ...$paths Holds the paths to join.
      * @return string Return the joined paths.
@@ -76,7 +78,7 @@ endif;
 if ( ! function_exists( 'get_operating_system' ) ) :
     /**
      * Get the operating system name.
-     * 
+     *
      * Retrieves the operatingsystem name (e.g. `mac`, `windows`, `linux` or `unknown`).
      *
      * @return string Returns the operating system name (e.g., "mac", "windows", "linux", or "unknown").
@@ -101,7 +103,7 @@ endif;
 if ( ! function_exists( 'normalize_path' ) ) :
     /**
      * Normalize path based on filesystem type.
-     * 
+     *
      * @param  string $path Holds the path to normalize.
      * @return string Return the path normalized path based on operating system.
      */
@@ -134,7 +136,7 @@ endif;
 if ( ! function_exists( 'redirect' ) ) :
     /**
      * Redirect to a specific URL.
-     * 
+     *
      * Redirects to a specified URL and return the result of the redirect
      * session if no key is provided.
      *
@@ -207,11 +209,7 @@ if ( ! function_exists( 'env' ) ) :
      */
     function env( string $key, mixed $default = null ) : mixed
     {
-        if ( isset( $_SERVER[ $key ] ) ) {
-            return $_SERVER[ $key ];
-        }
-
-        return $default;
+        return Env::get( $key, $default );
     }
 endif;
 
@@ -339,4 +337,18 @@ if ( ! function_exists( 'validation' ) ) :
     {
         return app( 'validator' )->validate( $data, $rules, $sessionName );
     }
+endif;
+
+if ( ! function_exists( 'value' ) ) :
+    /**
+     * The default value of the given value.
+     *
+     * @param  mixed $value
+     * @param  mixed ...$args
+     * @return mixed
+     */
+    function value( mixed $value, mixed ...$args ) : mixed
+    {
+        return $value instanceof Closure ? $value( ...$args ) : $value;
+        }
 endif;
