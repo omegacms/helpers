@@ -350,5 +350,18 @@ if ( ! function_exists( 'value' ) ) :
     function value( mixed $value, mixed ...$args ) : mixed
     {
         return $value instanceof Closure ? $value( ...$args ) : $value;
-        }
+    }
+endif;
+
+if ( ! function_exists( 'get_database_path' ) ) :
+    /**
+     * Get the path to the appropriate database migrations.
+     *
+     * @param  ?string $path (Optionally) Holds the path to append database path.
+     * @return string Return the path to the database folder.
+     */
+    function get_database_path( ?string $path = '' ) : string
+    {
+        return app()->getDatabasePath( $path );
+    }
 endif;
