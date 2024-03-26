@@ -51,168 +51,6 @@ use Omega\View\View;
  * @license     https://www.gnu.org/licenses/gpl-3.0-standalone.html     GPL V3.0+
  * @version     1.0.0
  */
-if ( ! function_exists( 'join_paths' ) ) :
-    /**
-     * Join the given path.
-     *
-     * Concatenates a base path with additional paths and returns the result.
-     *
-     * @param  ?string $basePath Holds the base path to join.
-     * @param  string  ...$paths Holds the paths to join.
-     * @return string Return the joined paths.
-     */
-    function join_paths( string $basePath, string ...$paths ) : string
-    {
-        foreach ( $paths as $index => $path ) {
-            if ( empty( $path ) ) {
-                unset( $paths[ $index ] );
-            } else {
-                $paths[ $index ] = DIRECTORY_SEPARATOR . ltrim( $path, DIRECTORY_SEPARATOR );
-            }
-        }
-
-        return $basePath . implode( '', $paths );
-    }
-endif;
-
-if ( ! function_exists( 'get_operating_system' ) ) :
-    /**
-     * Get the operating system name.
-     *
-     * Retrieves the operatingsystem name (e.g. `mac`, `windows`, `linux` or `unknown`).
-     *
-     * @return string Returns the operating system name (e.g., "mac", "windows", "linux", or "unknown").
-     */
-    function get_operating_system() : string
-    {
-        $os = strtolower( PHP_OS_FAMILY );
-
-        switch ( $os ) {
-            case 'darwin':
-                return 'mac';
-            case 'win':
-                return 'windows';
-            case 'linux':
-                return 'linux';
-            default:
-                return 'unknown';
-        }
-    }
-endif;
-
-if ( ! function_exists( 'normalize_path' ) ) :
-    /**
-     * Normalize path based on filesystem type.
-     *
-     * @param  string $path Holds the path to normalize.
-     * @return string Return the path normalized path based on operating system.
-     */
-    function normalize_path( string $path ) : string
-    {
-        $separator = DIRECTORY_SEPARATOR;
-        $path = str_replace( [ '/', '\\' ], $separator, $path );
-        $path = preg_replace( '#' . preg_quote( $separator ) . '{2,}#', $separator, $path );
-
-        if ( get_operating_system() === 'windows' && substr( $path, -1 ) !== $separator ) {
-            $path .= $separator;
-        }
-
-        return $path;
-    }
-endif;
-
-if ( ! function_exists( 'response' ) ) :
-    /**
-     * Get the response instance.
-     *
-     * @return mixed Returns the response instance.
-     */
-    function response() : mixed
-    {
-        return app( 'response' );
-    }
-endif;
-
-if ( ! function_exists( 'redirect' ) ) :
-    /**
-     * Redirect to a specific URL.
-     *
-     * Redirects to a specified URL and return the result of the redirect
-     * session if no key is provided.
-     *
-     * @param  string $url Holds the URL to redirect to.
-     * @return mixed Return that result of the redirect operation.
-     */
-    function redirect( string $url ) : mixed
-    {
-        return response()->redirect( $url );
-    }
-endif;
-
-if ( ! function_exists( 'session' ) ) :
-    /**
-     * Get or set a session value.
-     *
-     * @param  ?string $key     Holds the session key or null to get the entire session.
-     * @param  mixed   $default Holds the default value if the key is not found.
-     * @return mixed Returns the session value or the entire session if no key is provided.
-     */
-    function session( ?string $key = null, mixed $default = null ) : mixed
-    {
-        if ( is_null( $key ) ) {
-            return app( 'session' );
-        }
-
-        return app( 'session' )->get( $key, $default );
-    }
-endif;
-
-if ( ! function_exists( 'view' ) ) :
-    /**
-     * Render a view with the specified template and data, returning an istance of View class.
-     *
-     * @param  string $template Holds the template name.
-     * @param  array  $data     Holds an array of value to pass to the view.
-     * @return View Return an instance of the View class.
-     */
-    function view( string $template, array $data = [] ) : View
-    {
-        return app()->resolve( 'view' )->render( $template, $data );
-    }
-endif;
-
-if ( ! function_exists( 'config' ) ) :
-    /**
-     * Alias or set a configuration value.
-     *
-     * @param  ?string $key     Holds the configuration key or null to get the entire configuration.
-     * @param  mixed   $default Holds the default value if the key is not found.
-     * @return mixed Returns the configuration value or the entire configuration if no key is provided.
-    */
-    function config( ?string $key = null, mixed $default = null ) : mixed
-    {
-        if ( is_null( $key ) ) {
-            return app( 'config' );
-        }
-
-        return app( 'config' )->get( $key, $default );
-    }
-endif;
-
-if ( ! function_exists( 'env' ) ) :
-    /**
-     * Get the value of an environment variable.
-     *
-     * @param  string $key     Holds the key of the environment variable.
-     * @param  mixed  $default Holds the default value if the key is not set.
-     * @return mixed Returns the value of the environment variable or the default value if the key is not set.
-     */
-    function env( string $key, mixed $default = null ) : mixed
-    {
-        return Env::get( $key, $default );
-    }
-endif;
-
 if ( ! function_exists( 'app' ) ) :
     /**
      * Get an instance of the Omega Application.
@@ -239,6 +77,49 @@ if ( ! function_exists( 'basePath' ) ) :
     function basePath() : ?string
     {
         return app( 'paths.base' );
+    }
+endif;
+
+if ( ! function_exists( 'config' ) ) :
+    /**
+     * Alias or set a configuration value.
+     *
+     * @param  ?string $key     Holds the configuration key or null to get the entire configuration.
+     * @param  mixed   $default Holds the default value if the key is not found.
+     * @return mixed Returns the configuration value or the entire configuration if no key is provided.
+    */
+    function config( ?string $key = null, mixed $default = null ) : mixed
+    {
+        if ( is_null( $key ) ) {
+            return app( 'config' );
+        }
+
+        return app( 'config' )->get( $key, $default );
+    }
+endif;
+
+if ( ! function_exists( 'csrf' ) ) :
+    /**
+     * Set the CSRF token.
+     *
+     * Generates a CSRF token and stores it in the session.
+     *
+     * @return string Returns the generated CSRF token.
+     * @throws Exception if session is not enabled.
+     */
+    function csrf() : string
+    {
+        $session = session();
+
+        if ( ! $session ) {
+            throw new Exception(
+                'Session is not enabled.'
+            );
+        }
+
+        $session->put( 'token', $token = bin2hex( random_bytes( 32 ) ) );
+
+        return $token;
     }
 endif;
 
@@ -270,28 +151,128 @@ if ( ! function_exists( 'dump' ) ) :
     }
 endif;
 
-if ( ! function_exists( 'csrf' ) ) :
+if ( ! function_exists( 'env' ) ) :
     /**
-     * Set the CSRF token.
+     * Get the value of an environment variable.
      *
-     * Generates a CSRF token and stores it in the session.
-     *
-     * @return string Returns the generated CSRF token.
-     * @throws Exception if session is not enabled.
+     * @param  string $key     Holds the key of the environment variable.
+     * @param  mixed  $default Holds the default value if the key is not set.
+     * @return mixed Returns the value of the environment variable or the default value if the key is not set.
      */
-    function csrf() : string
+    function env( string $key, mixed $default = null ) : mixed
     {
-        $session = session();
+        return Env::get( $key, $default );
+    }
+endif;
 
-        if ( ! $session ) {
-            throw new Exception(
-                'Session is not enabled.'
-            );
+if ( ! function_exists( 'get_database_path' ) ) :
+    /**
+     * Get the path to the appropriate database migrations.
+     *
+     * @param  ?string $path (Optionally) Holds the path to append database path.
+     * @return string Return the path to the database folder.
+     */
+    function get_database_path( ?string $path = '' ) : string
+    {
+        return app()->getDatabasePath( $path );
+    }
+endif;
+
+if ( ! function_exists( 'get_operating_system' ) ) :
+    /**
+     * Get the operating system name.
+     *
+     * Retrieves the operatingsystem name (e.g. `mac`, `windows`, `linux` or `unknown`).
+     *
+     * @return string Returns the operating system name (e.g., "mac", "windows", "linux", or "unknown").
+     */
+    function get_operating_system() : string
+    {
+        $os = strtolower( PHP_OS_FAMILY );
+
+        switch ( $os ) {
+            case 'darwin':
+                return 'mac';
+            case 'win':
+                return 'windows';
+            case 'linux':
+                return 'linux';
+            default:
+                return 'unknown';
+        }
+    }
+endif;
+
+if ( ! function_exists( 'join_paths' ) ) :
+    /**
+     * Join the given path.
+     *
+     * Concatenates a base path with additional paths and returns the result.
+     *
+     * @param  ?string $basePath Holds the base path to join.
+     * @param  string  ...$paths Holds the paths to join.
+     * @return string Return the joined paths.
+     */
+    function join_paths( string $basePath, string ...$paths ) : string
+    {
+        foreach ( $paths as $index => $path ) {
+            if ( empty( $path ) ) {
+                unset( $paths[ $index ] );
+            } else {
+                $paths[ $index ] = DIRECTORY_SEPARATOR . ltrim( $path, DIRECTORY_SEPARATOR );
+            }
         }
 
-        $session->put( 'token', $token = bin2hex( random_bytes( 32 ) ) );
+        return $basePath . implode( '', $paths );
+    }
+endif;
 
-        return $token;
+if ( ! function_exists( 'normalize_path' ) ) :
+    /**
+     * Normalize path based on filesystem type.
+     *
+     * @param  string $path Holds the path to normalize.
+     * @return string Return the path normalized path based on operating system.
+     */
+    function normalize_path( string $path ) : string
+    {
+        $separator = DIRECTORY_SEPARATOR;
+        $path = str_replace( [ '/', '\\' ], $separator, $path );
+        $path = preg_replace( '#' . preg_quote( $separator ) . '{2,}#', $separator, $path );
+
+        if ( get_operating_system() === 'windows' && substr( $path, -1 ) !== $separator ) {
+            $path .= $separator;
+        }
+
+        return $path;
+    }
+endif;
+
+if ( ! function_exists( 'redirect' ) ) :
+    /**
+     * Redirect to a specific URL.
+     *
+     * Redirects to a specified URL and return the result of the redirect
+     * session if no key is provided.
+     *
+     * @param  string $url Holds the URL to redirect to.
+     * @return mixed Return that result of the redirect operation.
+     */
+    function redirect( string $url ) : mixed
+    {
+        return response()->redirect( $url );
+    }
+endif;
+
+if ( ! function_exists( 'response' ) ) :
+    /**
+     * Get the response instance.
+     *
+     * @return mixed Returns the response instance.
+     */
+    function response() : mixed
+    {
+        return app( 'response' );
     }
 endif;
 
@@ -319,6 +300,24 @@ if ( ! function_exists( 'secure' ) ) :
                 'CSRF token mismatch'
             );
         }
+    }
+endif;
+
+if ( ! function_exists( 'session' ) ) :
+    /**
+     * Get or set a session value.
+     *
+     * @param  ?string $key     Holds the session key or null to get the entire session.
+     * @param  mixed   $default Holds the default value if the key is not found.
+     * @return mixed Returns the session value or the entire session if no key is provided.
+     */
+    function session( ?string $key = null, mixed $default = null ) : mixed
+    {
+        if ( is_null( $key ) ) {
+            return app( 'session' );
+        }
+
+        return app( 'session' )->get( $key, $default );
     }
 endif;
 
@@ -353,15 +352,16 @@ if ( ! function_exists( 'value' ) ) :
     }
 endif;
 
-if ( ! function_exists( 'get_database_path' ) ) :
+if ( ! function_exists( 'view' ) ) :
     /**
-     * Get the path to the appropriate database migrations.
+     * Render a view with the specified template and data, returning an istance of View class.
      *
-     * @param  ?string $path (Optionally) Holds the path to append database path.
-     * @return string Return the path to the database folder.
+     * @param  string $template Holds the template name.
+     * @param  array  $data     Holds an array of value to pass to the view.
+     * @return View Return an instance of the View class.
      */
-    function get_database_path( ?string $path = '' ) : string
+    function view( string $template, array $data = [] ) : View
     {
-        return app()->getDatabasePath( $path );
+        return app()->resolve( 'view' )->render( $template, $data );
     }
 endif;
