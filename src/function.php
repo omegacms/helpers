@@ -205,6 +205,19 @@ if ( ! function_exists( 'get_operating_system' ) ) :
     }
 endif;
 
+if ( ! function_exists( 'head' ) ) :
+    /**
+     * Get the first element of an array.
+     * 
+     * @param  array $array Holds the array to get the first element.
+     * @return mixed
+     */
+    function head( array $array ) : mixed
+    {
+        return reset( $array );
+    }
+endif;
+
 if ( ! function_exists( 'join_paths' ) ) :
     /**
      * Join the given path.
