@@ -205,6 +205,19 @@ if ( ! function_exists( 'get_operating_system' ) ) :
     }
 endif;
 
+if ( ! function_exists( 'get_storage_path' ) ) :
+    /**
+     * Get the path to the storage folder.
+     *
+     * @param  ?string $path (Optionally) Holds the path to append storage path.
+     * @return string Return the path to the storage folder.
+     */
+    function get_storage_path( ?string $path = '' ) : string
+    {
+        return app()->getStoragePath( $path );
+    }
+endif;
+
 if ( ! function_exists( 'head' ) ) :
     /**
      * Get the first element of an array.
