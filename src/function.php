@@ -180,6 +180,19 @@ if ( ! function_exists( 'get_database_path' ) ) :
     }
 endif;
 
+if ( ! function_exists( 'get_config_path' ) ) :
+    /**
+     * Get the path to the configuration directory.
+     *
+     * @param  ?string $path (Optionally) Holds the path to append config path.
+     * @return string Return the path to the config folder.
+     */
+    function get_config_path( ?string $path = '' ) : string
+    {
+        return app()->getConfigPath( $path );
+    }
+endif;
+
 if ( ! function_exists( 'get_operating_system' ) ) :
     /**
      * Get the operating system name.
