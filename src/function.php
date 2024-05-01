@@ -218,6 +218,19 @@ if ( ! function_exists( 'get_operating_system' ) ) :
     }
 endif;
 
+if ( ! function_exists( 'get_resource_path' ) ) :
+    /**
+     * Get the path to the resource folder.
+     *
+     * @param  ?string $path (Optionally) Holds the path to append resource path.
+     * @return string Return the path to the resource folder.
+     */
+    function get_resource_path( ?string $path = '' ) : string
+    {
+        return app()->getResourcePath( $path );
+    }
+endif;
+
 if ( ! function_exists( 'get_storage_path' ) ) :
     /**
      * Get the path to the storage folder.
