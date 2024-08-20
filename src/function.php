@@ -247,7 +247,7 @@ endif;
 if ( ! function_exists( 'head' ) ) :
     /**
      * Get the first element of an array.
-     * 
+     *
      * @param  array $array Holds the array to get the first element.
      * @return mixed
      */
@@ -300,6 +300,18 @@ if ( ! function_exists( 'normalize_path' ) ) :
 
         return $path;
     }
+endif;
+
+if ( ! function_exists( 'now' ) ) :
+	/**
+	 * Returns the current date and time in the configured timezone.
+	 *
+	 * @return void
+	 */
+	function now()
+	{
+		return app()->setTimeZone();
+	}
 endif;
 
 if ( ! function_exists( 'redirect' ) ) :
