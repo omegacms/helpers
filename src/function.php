@@ -387,7 +387,7 @@ if ( ! function_exists( 'session' ) ) :
     }
 endif;
 
-if ( ! function_exists( 'validation' ) ) :
+if ( ! function_exists( 'validate' ) ) :
     /**
      * Validate input.
      *
