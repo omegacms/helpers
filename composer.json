@@ -23,9 +23,6 @@
     "symfony/process": "^5.2"
   },
   "autoload": {
-    "psr-4": {
-      "Omega\\Helpers\\": "src/"
-    },
     "files": [
       "src/function.php"
     ]

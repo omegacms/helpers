@@ -14,23 +14,8 @@
 declare( strict_types = 1 );
 
 /**
- * @namespace
- */
-namespace Omega\Helpers;
-
-/**
  * @use
  */
-use function bin2hex;
-use function function_exists;
-use function hash_equals;
-use function implode;
-use function is_null;
-use function ltrim;
-use function random_bytes;
-use function strtolower;
-use Closure;
-use Exception;
 use Omega\Application\Application;
 use Omega\Environment\Env;
 use Omega\View\View;
