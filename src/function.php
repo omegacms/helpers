@@ -17,7 +17,7 @@ declare( strict_types = 1 );
  * @use
  */
 use Omega\Application\Application;
-use Omega\Environment\Env;
+use Omega\Environment\Dotenv;
 use Omega\View\View;
 
 /**
@@ -148,7 +148,7 @@ if ( ! function_exists( 'env' ) ) :
      */
     function env( string $key, mixed $default = null ) : mixed
     {
-        return Env::get( $key, $default );
+        return Dotenv::get( $key, $default );
     }
 endif;
 
