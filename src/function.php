@@ -295,7 +295,7 @@ if ( ! function_exists( 'now' ) ) :
 	 */
 	function now()
 	{
-		return app()->setTimeZone();
+		return app()->setCurrentTimeZone()->getCurrentTimeZone();
 	}
 endif;
 
