@@ -127,7 +127,7 @@ if ( ! function_exists( 'dump' ) ) :
     /**
      * Display a variable dump in a formatted manner.
      *
-     * @param  array $array The array to be dumped.
+     * @param  array<mixed> $array The array to be dumped.
      * @return void
      */
     function dump( array $array ) : void
@@ -233,7 +233,7 @@ if ( ! function_exists( 'head' ) ) :
     /**
      * Get the first element of an array.
      *
-     * @param  array $array Holds the array to get the first element.
+     * @param  array<mixed> $array Holds the array to get the first element.
      * @return mixed
      */
     function head( array $array ) : mixed
@@ -252,7 +252,7 @@ if ( ! function_exists( 'join_paths' ) ) :
      * @param  string  ...$paths Holds the paths to join.
      * @return string Return the joined paths.
      */
-    function join_paths( string $basePath, string ...$paths ) : string
+    function join_paths( ?string $basePath, string ...$paths ) : string
     {
         foreach ( $paths as $index => $path ) {
             if ( empty( $path ) ) {
@@ -271,10 +271,14 @@ if ( ! function_exists( 'normalize_path' ) ) :
      * Normalize path based on filesystem type.
      *
      * @param  string $path Holds the path to normalize.
-     * @return string Return the path normalized path based on operating system.
+     * @return ?string Return the path normalized path based on operating system.
      */
-    function normalize_path( string $path ) : string
+    function normalize_path( ?string $path ) : string
     {
+        if ( $path === null ) {
+            return '';
+        }
+
         $separator = DIRECTORY_SEPARATOR;
         $path = str_replace( [ '/', '\\' ], $separator, $path );
         $path = preg_replace( '#' . preg_quote( $separator ) . '{2,}#', $separator, $path );
@@ -291,9 +295,9 @@ if ( ! function_exists( 'now' ) ) :
 	/**
 	 * Returns the current date and time in the configured timezone.
 	 *
-	 * @return void
+	 * @return string Return the formatted time zone.
 	 */
-	function now()
+	function now() : string
 	{
 		return app()->setCurrentTimeZone()->getCurrentTimeZone();
 	}
@@ -378,9 +382,9 @@ if ( ! function_exists( 'validate' ) ) :
      *
      * Validates input data against specified rules.
      *
-     * @param  array  $data        Holds an array of data to validate.
-     * @param  array  $rules       Holds an array of rules.
-     * @param  string $sessionName Holds the session name for storing validation errors.
+     * @param  array<string, mixed>  $data        Holds an array of data to validate.
+     * @param  array<string, mixed>  $rules       Holds an array of rules.
+     * @param  string                $sessionName Holds the session name for storing validation errors.
      * @return mixed Returns the validation result.
      */
     function validate( array $data, array $rules, string $sessionName = 'errors' ) : mixed
@@ -407,8 +411,8 @@ if ( ! function_exists( 'view' ) ) :
     /**
      * Render a view with the specified template and data, returning an istance of View class.
      *
-     * @param  string $template Holds the template name.
-     * @param  array  $data     Holds an array of value to pass to the view.
+     * @param  string                $template Holds the template name.
+     * @param  array<string, mixed>  $data     Holds an array of value to pass to the view.
      * @return View Return an instance of the View class.
      */
     function view( string $template, array $data = [] ) : View
