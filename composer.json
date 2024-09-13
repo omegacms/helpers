@@ -22,8 +22,5 @@
       "src/function.php"
     ]
   },
-  "scripts": {
-    "test": "vendor/bin/phpunit"
-  },
   "minimum-stability": "stable"
 }
