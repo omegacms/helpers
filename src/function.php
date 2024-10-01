@@ -406,17 +406,3 @@ if ( ! function_exists( 'value' ) ) :
         return $value instanceof Closure ? $value( ...$args ) : $value;
     }
 endif;
-
-if ( ! function_exists( 'view' ) ) :
-    /**
-     * Render a view with the specified template and data, returning an istance of View class.
-     *
-     * @param  string                $template Holds the template name.
-     * @param  array<string, mixed>  $data     Holds an array of value to pass to the view.
-     * @return View Return an instance of the View class.
-     */
-    function view( string $template, array $data = [] ) : View
-    {
-        return app()->resolve( 'view' )->render( $template, $data );
-    }
-endif;
