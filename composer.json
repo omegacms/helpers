@@ -1,7 +1,7 @@
 {
   "name": "omegacms/helpers",
   "type": "package",
-  "description": "Omega CMS Logging Package",
+  "description": "Omega CMS Helpers Package",
   "keywords": [ "omegacms", "framework", "helpers"],
   "homepage": "https://omegacms.github.io",
   "license": "GPL-3.0",
